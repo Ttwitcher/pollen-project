@@ -23,7 +23,7 @@
         }
 
         .container {
-            max-width: 1100px;
+            max-width: 1200px;
             width: 100%;
         }
 
@@ -283,54 +283,44 @@
             transform: scale(0.97);
         }
 
-        .btn-danger-outline {
-            background: transparent;
-            border-color: #dba8a8;
-            color: #8f4a4a;
-        }
-
-        .btn-danger-outline:hover {
-            background: #fce8e8;
-        }
-
-        /* ----- 研究成果展示区（支持图片 + PDF）----- */
+        /* ----- 研究成果展示区（更大、更清晰）----- */
         .research-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-            gap: 1.2rem;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1.5rem;
             margin-top: 0.8rem;
         }
 
         .research-item {
             background: #f8fafd;
             border-radius: 1.2rem;
-            padding: 1rem;
+            padding: 1.2rem;
             border: 1px solid #e2eaf2;
             display: flex;
             flex-direction: column;
-            gap: 0.5rem;
+            gap: 0.6rem;
             position: relative;
             transition: box-shadow 0.2s;
         }
 
         .research-item:hover {
-            box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+            box-shadow: 0 4px 16px rgba(0,0,0,0.08);
         }
 
-        /* 图片样式 */
+        /* 图片样式 - 更大 */
         .research-item img {
             width: 100%;
-            height: 160px;
+            height: 200px;
             object-fit: cover;
             border-radius: 0.8rem;
             background: #e8eef5;
             cursor: pointer;
         }
 
-        /* PDF 样式 */
+        /* PDF 样式 - 更大 */
         .research-item .pdf-wrapper {
             width: 100%;
-            height: 160px;
+            height: 200px;
             border-radius: 0.8rem;
             background: #f0f4fa;
             display: flex;
@@ -350,13 +340,13 @@
         }
 
         .research-item .pdf-wrapper .pdf-icon {
-            font-size: 3rem;
+            font-size: 3.6rem;
             line-height: 1;
         }
 
         .research-item .pdf-wrapper .pdf-name {
-            font-size: 0.75rem;
-            margin-top: 0.3rem;
+            font-size: 0.8rem;
+            margin-top: 0.4rem;
             text-align: center;
             word-break: break-all;
             max-width: 100%;
@@ -366,11 +356,12 @@
         }
 
         .research-item .research-text {
-            font-size: 0.9rem;
+            font-size: 0.95rem;
             color: #1e3347;
             outline: none;
             padding: 0.2rem 0.3rem;
             border-radius: 4px;
+            min-height: 2.4rem;
         }
 
         .research-item .research-text:focus {
@@ -378,19 +369,17 @@
             box-shadow: 0 0 0 2px #aac7e4;
         }
 
-        /* 文件类型标签 */
         .research-item .file-tag {
-            font-size: 0.6rem;
+            font-size: 0.65rem;
             background: #d4e2f0;
             color: #1a4b6d;
-            padding: 0.05rem 0.5rem;
+            padding: 0.1rem 0.6rem;
             border-radius: 20px;
             align-self: flex-start;
             font-weight: 500;
             letter-spacing: 0.3px;
         }
 
-        /* 删除按钮 */
         .research-item .delete-btn {
             position: absolute;
             top: 0.4rem;
@@ -399,9 +388,9 @@
             color: white;
             border: none;
             border-radius: 50%;
-            width: 26px;
-            height: 26px;
-            font-size: 0.8rem;
+            width: 28px;
+            height: 28px;
+            font-size: 0.85rem;
             cursor: pointer;
             transition: 0.15s;
             line-height: 1;
@@ -425,7 +414,7 @@
 
         .research-actions input[type="text"] {
             flex: 1;
-            min-width: 140px;
+            min-width: 160px;
             padding: 0.5rem 1rem;
             border-radius: 60px;
             border: 1px solid #d3dfeb;
@@ -499,6 +488,8 @@
             .card { padding: 1.2rem; }
             .action-bar { flex-direction: column; gap: 0.8rem; align-items: stretch; }
             .research-grid { grid-template-columns: 1fr; }
+            .research-item img { height: 180px; }
+            .research-item .pdf-wrapper { height: 180px; }
         }
     </style>
 </head>
@@ -546,9 +537,9 @@
             </div>
         </div>
 
-        <!-- 卡片：研究成果（支持图片 + PDF） -->
+        <!-- 卡片：研究成果（支持图片 + PDF，更大展示） -->
         <div class="card card-full">
-            <div class="card-title">🏆 研究成果展示 <span style="font-weight:400; text-transform:none; font-size:0.7rem; color:#6f8aa3;">（支持 图片 / PDF）</span></div>
+            <div class="card-title">🏆 研究成果展示 <span style="font-weight:400; text-transform:none; font-size:0.7rem; color:#6f8aa3;">（支持 图片 / PDF · 点击放大预览）</span></div>
             <div id="researchContainer"></div>
             <div class="research-actions">
                 <input type="text" id="researchTextInput" placeholder="输入成果描述..." />
@@ -560,12 +551,12 @@
             </div>
         </div>
 
-        <!-- 卡片：团队 & 联系 -->
+        <!-- 卡片：团队 & 联系（已更新） -->
         <div class="card card-full">
             <div class="card-title">👥 团队 & 联系</div>
             <div class="editable" contenteditable="true" id="teamInfo" spellcheck="true">
-                <p><strong>指导老师：</strong> 白伟宁-北京师范大学  倪川   周娜</p>
-                <p><strong>项目成员：</strong> 王心童  张黎萌  梁子铜</p>
+                <p><strong>指导老师：</strong> 周娜 · 倪川 · 白伟宁</p>
+                <p><strong>项目成员：</strong> 王心童、张黎萌、梁子桐</p>
                 <p style="margin-top:0.4rem; color:#3d687f;">📧 联络邮箱：wangxintong711@163.com</p>
             </div>
         </div>
@@ -598,7 +589,7 @@
 
         // ---------- 存储 Key ----------
         const TIMELINE_KEY = 'pollen_timeline_v2';
-        const RESEARCH_KEY = 'pollen_research_v3';  // 升级版本，支持 PDF
+        const RESEARCH_KEY = 'pollen_research_v3';
         const EDITABLE_KEY = 'pollen_editable_v2';
 
         // ---------- 默认数据 ----------
@@ -689,7 +680,7 @@
             updateSaveStatus('↺ 已重置时间线', true);
         }
 
-        // ---------- 研究成果（支持图片 + PDF）----------
+        // ---------- 研究成果 ----------
         function loadResearch() { return loadData(RESEARCH_KEY, defaultResearch); }
         function saveResearch(data) { saveData(RESEARCH_KEY, data); }
 
@@ -715,7 +706,7 @@
                 } else if (!isPdf && item.data) {
                     contentHtml = `<img src="${item.data}" alt="研究成果图片" loading="lazy" onclick="window.open('${item.data}','_blank')" />`;
                 } else {
-                    contentHtml = `<div style="height:160px; background:#eef4fa; border-radius:0.8rem; display:flex; align-items:center; justify-content:center; color:#8aa3bc; font-size:0.8rem;">暂无预览</div>`;
+                    contentHtml = `<div style="height:200px; background:#eef4fa; border-radius:0.8rem; display:flex; align-items:center; justify-content:center; color:#8aa3bc; font-size:0.9rem;">暂无预览</div>`;
                 }
                 html += `
                     <div class="research-item" data-index="${index}">
@@ -729,7 +720,6 @@
             html += `</div>`;
             container.innerHTML = html;
 
-            // 删除按钮
             container.querySelectorAll('.delete-btn').forEach(btn => {
                 btn.addEventListener('click', function() {
                     const idx = parseInt(this.dataset.index, 10);
@@ -743,7 +733,6 @@
                 });
             });
 
-            // 编辑文字自动保存
             container.querySelectorAll('.research-text').forEach(el => {
                 el.addEventListener('blur', function() {
                     const item = this.closest('.research-item');
@@ -764,7 +753,7 @@
             items.push({
                 id: 'r' + Date.now(),
                 text: text.trim() || '新研究成果',
-                type: fileType || 'image',   // 'image' 或 'pdf'
+                type: fileType || 'image',
                 data: fileData || '',
                 filename: filename || ''
             });
@@ -809,16 +798,10 @@
 
         // ---------- 初始化 ----------
         function init() {
-            // 加载可编辑区域
             loadAllEditable();
-
-            // 加载时间线
             renderTimeline(loadTimeline());
-
-            // 加载研究成果
             renderResearch(loadResearch());
 
-            // 绑定添加时间线
             document.getElementById('addEntryBtn').addEventListener('click', function() {
                 const input = document.getElementById('newEntryInput');
                 if (addTimelineEntry(input.value)) input.value = '';
@@ -830,14 +813,12 @@
                 if (confirm('重置将丢失当前时间线内容，确定吗？')) resetTimeline();
             });
 
-            // 绑定添加研究成果
             document.getElementById('addResearchBtn').addEventListener('click', function() {
                 const textInput = document.getElementById('researchTextInput');
                 const text = textInput.value.trim() || '新研究成果';
                 const imageInput = document.getElementById('researchImageUpload');
                 const pdfInput = document.getElementById('researchPdfUpload');
 
-                // 优先处理图片，其次 PDF
                 if (imageInput.files && imageInput.files[0]) {
                     const reader = new FileReader();
                     reader.onload = function(e) {
@@ -857,32 +838,27 @@
                     };
                     reader.readAsDataURL(pdfInput.files[0]);
                 } else {
-                    // 没有文件，只添加文字
                     addResearchItem(text, '', 'image', '');
                     textInput.value = '';
                 }
             });
 
-            // 图片上传提示
             document.getElementById('researchImageUpload').addEventListener('change', function() {
                 if (this.files && this.files[0]) {
                     updateSaveStatus('📷 已选择图片，点击"添加成果"完成', true);
                 }
             });
 
-            // PDF 上传提示
             document.getElementById('researchPdfUpload').addEventListener('change', function() {
                 if (this.files && this.files[0]) {
                     updateSaveStatus('📄 已选择 PDF，点击"添加成果"完成', true);
                 }
             });
 
-            // 保存所有
             document.getElementById('saveAllBtn').addEventListener('click', function() {
                 saveAllEditable();
             });
 
-            // 所有可编辑区域失焦自动保存
             document.querySelectorAll('.editable[contenteditable="true"]').forEach(el => {
                 el.addEventListener('blur', function() {
                     setTimeout(() => saveAllEditable(), 100);
