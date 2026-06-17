@@ -168,7 +168,7 @@
             background: #f6faff;
         }
 
-        /* ----- 时间线 (日期 + 文字都可编辑) ----- */
+        /* ----- 时间线 ----- */
         .timeline {
             display: flex;
             flex-direction: column;
@@ -293,10 +293,10 @@
             background: #fce8e8;
         }
 
-        /* ----- 研究成果展示区 ----- */
+        /* ----- 研究成果展示区（支持图片 + PDF）----- */
         .research-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
             gap: 1.2rem;
             margin-top: 0.8rem;
         }
@@ -310,14 +310,59 @@
             flex-direction: column;
             gap: 0.5rem;
             position: relative;
+            transition: box-shadow 0.2s;
         }
 
+        .research-item:hover {
+            box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+        }
+
+        /* 图片样式 */
         .research-item img {
             width: 100%;
             height: 160px;
             object-fit: cover;
             border-radius: 0.8rem;
             background: #e8eef5;
+            cursor: pointer;
+        }
+
+        /* PDF 样式 */
+        .research-item .pdf-wrapper {
+            width: 100%;
+            height: 160px;
+            border-radius: 0.8rem;
+            background: #f0f4fa;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            border: 1px dashed #b7cddf;
+            cursor: pointer;
+            transition: background 0.2s;
+            text-decoration: none;
+            color: #1a4b6d;
+            padding: 0.5rem;
+        }
+
+        .research-item .pdf-wrapper:hover {
+            background: #e3edf7;
+        }
+
+        .research-item .pdf-wrapper .pdf-icon {
+            font-size: 3rem;
+            line-height: 1;
+        }
+
+        .research-item .pdf-wrapper .pdf-name {
+            font-size: 0.75rem;
+            margin-top: 0.3rem;
+            text-align: center;
+            word-break: break-all;
+            max-width: 100%;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
         }
 
         .research-item .research-text {
@@ -333,6 +378,19 @@
             box-shadow: 0 0 0 2px #aac7e4;
         }
 
+        /* 文件类型标签 */
+        .research-item .file-tag {
+            font-size: 0.6rem;
+            background: #d4e2f0;
+            color: #1a4b6d;
+            padding: 0.05rem 0.5rem;
+            border-radius: 20px;
+            align-self: flex-start;
+            font-weight: 500;
+            letter-spacing: 0.3px;
+        }
+
+        /* 删除按钮 */
         .research-item .delete-btn {
             position: absolute;
             top: 0.4rem;
@@ -347,6 +405,7 @@
             cursor: pointer;
             transition: 0.15s;
             line-height: 1;
+            z-index: 2;
         }
 
         .research-item .delete-btn:hover {
@@ -354,6 +413,7 @@
             transform: scale(1.08);
         }
 
+        /* 操作栏 */
         .research-actions {
             display: flex;
             flex-wrap: wrap;
@@ -392,6 +452,24 @@
             background: #d3e3f0;
         }
 
+        .file-upload-label.pdf-label {
+            background: #f0e6d8;
+            border-color: #d4b896;
+            color: #7a5a3a;
+        }
+
+        .file-upload-label.pdf-label:hover {
+            background: #e8dac8;
+        }
+
+        /* 空状态 */
+        .empty-state {
+            color: #7a93ac;
+            font-style: italic;
+            padding: 0.8rem 0;
+            text-align: center;
+        }
+
         /* ----- 底部操作栏 ----- */
         .action-bar {
             display: flex;
@@ -414,14 +492,6 @@
         .save-status.success {
             background: #d7f0e3;
             color: #1d6b4a;
-        }
-
-        /* 空状态 */
-        .empty-state {
-            color: #7a93ac;
-            font-style: italic;
-            padding: 0.8rem 0;
-            text-align: center;
         }
 
         @media (max-width: 500px) {
@@ -450,13 +520,13 @@
 
     <!-- 编辑提示 -->
     <div class="edit-hint">
-        ✏️ <span>点击任意文字即可编辑</span> · 修改后点击下方 “保存所有更新” 持久化
+        ✏️ <span>点击任意文字即可编辑</span> · 修改后点击下方 "保存所有更新" 持久化
     </div>
 
     <!-- 主网格 -->
     <div class="grid">
 
-        <!-- 卡片：项目简介 (全宽) -->
+        <!-- 卡片：项目简介 -->
         <div class="card card-full">
             <div class="card-title">📌 项目简介</div>
             <div class="editable" contenteditable="true" id="projectDesc" spellcheck="true">
@@ -468,9 +538,7 @@
         <!-- 卡片：时间线 -->
         <div class="card card-full">
             <div class="card-title">⏳ 研究进程时间线 <span style="font-weight:400; text-transform:none; font-size:0.7rem; color:#6f8aa3;">（点击日期或文字直接编辑）</span></div>
-            <div class="timeline" id="timelineContainer">
-                <!-- 由 JS 动态渲染 -->
-            </div>
+            <div class="timeline" id="timelineContainer"></div>
             <div class="add-entry-area">
                 <input type="text" id="newEntryInput" placeholder="输入新事件描述..." />
                 <button class="btn btn-primary" id="addEntryBtn">+ 添加</button>
@@ -478,27 +546,27 @@
             </div>
         </div>
 
-        <!-- 卡片：研究成果 (全宽) -->
+        <!-- 卡片：研究成果（支持图片 + PDF） -->
         <div class="card card-full">
-            <div class="card-title">🏆 研究成果展示</div>
-            <div id="researchContainer">
-                <!-- 由 JS 动态渲染研究成果 -->
-            </div>
+            <div class="card-title">🏆 研究成果展示 <span style="font-weight:400; text-transform:none; font-size:0.7rem; color:#6f8aa3;">（支持 图片 / PDF）</span></div>
+            <div id="researchContainer"></div>
             <div class="research-actions">
-                <input type="text" id="researchTextInput" placeholder="输入研究成果描述..." />
+                <input type="text" id="researchTextInput" placeholder="输入成果描述..." />
                 <label class="file-upload-label" for="researchImageUpload">🖼️ 添加图片</label>
                 <input type="file" id="researchImageUpload" accept="image/*" />
+                <label class="file-upload-label pdf-label" for="researchPdfUpload">📄 添加 PDF</label>
+                <input type="file" id="researchPdfUpload" accept=".pdf" />
                 <button class="btn btn-success" id="addResearchBtn">+ 添加成果</button>
             </div>
         </div>
 
-        <!-- 卡片：团队 & 联系 (全宽) -->
+        <!-- 卡片：团队 & 联系 -->
         <div class="card card-full">
             <div class="card-title">👥 团队 & 联系</div>
             <div class="editable" contenteditable="true" id="teamInfo" spellcheck="true">
-                <p><strong>指导老师：</strong> 白伟宁 倪川 周娜</p>
-                <p><strong>项目成员：</strong> 王心童 张黎萌 梁子桐</p>
-                <p style="margin-top:0.4rem; color:#3d687f;">📧 联络邮箱：wangxintong711@163.com</p>
+                <p><strong>指导老师：</strong> 张教授 · 环境科学学院</p>
+                <p><strong>项目成员：</strong> 李明（数据采集）、王芳（建模分析）、陈宇（硬件维护）</p>
+                <p style="margin-top:0.4rem; color:#3d687f;">📧 联络邮箱：pollen.research@campus.edu</p>
             </div>
         </div>
     </div>
@@ -530,7 +598,7 @@
 
         // ---------- 存储 Key ----------
         const TIMELINE_KEY = 'pollen_timeline_v2';
-        const RESEARCH_KEY = 'pollen_research_v2';
+        const RESEARCH_KEY = 'pollen_research_v3';  // 升级版本，支持 PDF
         const EDITABLE_KEY = 'pollen_editable_v2';
 
         // ---------- 默认数据 ----------
@@ -538,11 +606,12 @@
             { date: '2026-05-10', text: '项目启动，完成传感器选型与采购' },
             { date: '2026-05-22', text: '第一批 3 个采样点安装完成，开始试运行' },
             { date: '2026-06-02', text: '数据回传稳定，启动花粉浓度基线统计' },
+            { date: '2026-06-14', text: '完成 5 个采样点部署，校准传感器' },
         ];
 
         const defaultResearch = [
-            { id: 'r1', text: '完成首批传感器数据校准，误差＜5%', image: '' },
-            { id: 'r2', text: '建立花粉浓度与气象因子的初步相关性模型', image: '' },
+            { id: 'r1', text: '完成首批传感器数据校准，误差＜5%', type: 'image', data: '' },
+            { id: 'r2', text: '建立花粉浓度与气象因子的初步相关性模型', type: 'image', data: '' },
         ];
 
         // ---------- 通用存储 ----------
@@ -587,7 +656,6 @@
             });
             container.innerHTML = html;
 
-            // 绑定编辑事件：实时更新内存数据
             container.querySelectorAll('.date-editable, .content-editable').forEach(el => {
                 el.addEventListener('blur', function() {
                     const item = this.closest('.timeline-item');
@@ -621,7 +689,7 @@
             updateSaveStatus('↺ 已重置时间线', true);
         }
 
-        // ---------- 研究成果 ----------
+        // ---------- 研究成果（支持图片 + PDF）----------
         function loadResearch() { return loadData(RESEARCH_KEY, defaultResearch); }
         function saveResearch(data) { saveData(RESEARCH_KEY, data); }
 
@@ -634,11 +702,26 @@
             }
             let html = `<div class="research-grid">`;
             items.forEach((item, index) => {
-                const imgHtml = item.image ? `<img src="${item.image}" alt="研究成果图片" />` : '';
+                const isPdf = item.type === 'pdf';
+                const tag = isPdf ? '📄 PDF' : '🖼️ 图片';
+                let contentHtml = '';
+                if (isPdf && item.data) {
+                    contentHtml = `
+                        <a href="${item.data}" target="_blank" class="pdf-wrapper" title="点击预览或下载 PDF">
+                            <span class="pdf-icon">📄</span>
+                            <span class="pdf-name">${item.filename || '文档.pdf'}</span>
+                        </a>
+                    `;
+                } else if (!isPdf && item.data) {
+                    contentHtml = `<img src="${item.data}" alt="研究成果图片" loading="lazy" onclick="window.open('${item.data}','_blank')" />`;
+                } else {
+                    contentHtml = `<div style="height:160px; background:#eef4fa; border-radius:0.8rem; display:flex; align-items:center; justify-content:center; color:#8aa3bc; font-size:0.8rem;">暂无预览</div>`;
+                }
                 html += `
                     <div class="research-item" data-index="${index}">
                         <button class="delete-btn" data-index="${index}">✕</button>
-                        ${imgHtml}
+                        <span class="file-tag">${tag}</span>
+                        ${contentHtml}
                         <div class="research-text" contenteditable="true" data-field="text">${item.text || ''}</div>
                     </div>
                 `;
@@ -676,12 +759,14 @@
             });
         }
 
-        function addResearchItem(text, imageDataUrl) {
+        function addResearchItem(text, fileData, fileType, filename) {
             const items = loadResearch();
             items.push({
                 id: 'r' + Date.now(),
                 text: text.trim() || '新研究成果',
-                image: imageDataUrl || ''
+                type: fileType || 'image',   // 'image' 或 'pdf'
+                data: fileData || '',
+                filename: filename || ''
             });
             saveResearch(items);
             renderResearch(items);
@@ -696,7 +781,6 @@
                 if (el.id) data[el.id] = el.innerHTML;
             });
             saveData(EDITABLE_KEY, data);
-            // 时间线和研究成果已经各自保存
             updateSaveStatus('✅ 所有内容已保存', true);
         }
 
@@ -750,34 +834,51 @@
             document.getElementById('addResearchBtn').addEventListener('click', function() {
                 const textInput = document.getElementById('researchTextInput');
                 const text = textInput.value.trim() || '新研究成果';
-                // 检查是否有待上传的图片
-                const fileInput = document.getElementById('researchImageUpload');
-                if (fileInput.files && fileInput.files[0]) {
+                const imageInput = document.getElementById('researchImageUpload');
+                const pdfInput = document.getElementById('researchPdfUpload');
+
+                // 优先处理图片，其次 PDF
+                if (imageInput.files && imageInput.files[0]) {
                     const reader = new FileReader();
                     reader.onload = function(e) {
-                        addResearchItem(text, e.target.result);
+                        addResearchItem(text, e.target.result, 'image', imageInput.files[0].name);
                         textInput.value = '';
-                        fileInput.value = '';
+                        imageInput.value = '';
+                        pdfInput.value = '';
                     };
-                    reader.readAsDataURL(fileInput.files[0]);
+                    reader.readAsDataURL(imageInput.files[0]);
+                } else if (pdfInput.files && pdfInput.files[0]) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        addResearchItem(text, e.target.result, 'pdf', pdfInput.files[0].name);
+                        textInput.value = '';
+                        imageInput.value = '';
+                        pdfInput.value = '';
+                    };
+                    reader.readAsDataURL(pdfInput.files[0]);
                 } else {
-                    addResearchItem(text, '');
+                    // 没有文件，只添加文字
+                    addResearchItem(text, '', 'image', '');
                     textInput.value = '';
                 }
             });
 
-            // 图片上传预览：直接绑定到添加按钮逻辑中
+            // 图片上传提示
             document.getElementById('researchImageUpload').addEventListener('change', function() {
-                // 只是提示用户已选图片，实际添加由按钮触发
                 if (this.files && this.files[0]) {
                     updateSaveStatus('📷 已选择图片，点击"添加成果"完成', true);
                 }
             });
 
+            // PDF 上传提示
+            document.getElementById('researchPdfUpload').addEventListener('change', function() {
+                if (this.files && this.files[0]) {
+                    updateSaveStatus('📄 已选择 PDF，点击"添加成果"完成', true);
+                }
+            });
+
             // 保存所有
             document.getElementById('saveAllBtn').addEventListener('click', function() {
-                // 先触发一次时间线和研究的保存（blur 已自动保存，这里作为补充）
-                // 收集所有可编辑区域
                 saveAllEditable();
             });
 
