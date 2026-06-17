@@ -283,10 +283,20 @@
             transform: scale(0.97);
         }
 
-        /* ----- 研究成果展示区（更大、更清晰）----- */
+        .btn-download {
+            background: #4a7a9c;
+            color: white;
+        }
+
+        .btn-download:hover {
+            background: #346180;
+            transform: scale(0.97);
+        }
+
+        /* ----- 研究成果展示区 ----- */
         .research-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
             gap: 1.5rem;
             margin-top: 0.8rem;
         }
@@ -307,7 +317,6 @@
             box-shadow: 0 4px 16px rgba(0,0,0,0.08);
         }
 
-        /* 图片样式 - 更大 */
         .research-item img {
             width: 100%;
             height: 200px;
@@ -317,42 +326,38 @@
             cursor: pointer;
         }
 
-        /* PDF 样式 - 更大 */
-        .research-item .pdf-wrapper {
+        /* PDF 内嵌预览 - 可滚动查看 */
+        .research-item .pdf-container {
             width: 100%;
-            height: 200px;
+            height: 260px;
             border-radius: 0.8rem;
-            background: #f0f4fa;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            border: 1px dashed #b7cddf;
-            cursor: pointer;
-            transition: background 0.2s;
-            text-decoration: none;
-            color: #1a4b6d;
-            padding: 0.5rem;
-        }
-
-        .research-item .pdf-wrapper:hover {
-            background: #e3edf7;
-        }
-
-        .research-item .pdf-wrapper .pdf-icon {
-            font-size: 3.6rem;
-            line-height: 1;
-        }
-
-        .research-item .pdf-wrapper .pdf-name {
-            font-size: 0.8rem;
-            margin-top: 0.4rem;
-            text-align: center;
-            word-break: break-all;
-            max-width: 100%;
             overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
+            border: 1px solid #dce5ef;
+            background: #f5f8fc;
+            position: relative;
+        }
+
+        .research-item .pdf-container embed {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        .research-item .pdf-container iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        .research-item .pdf-actions {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 0.2rem;
+        }
+
+        .research-item .pdf-actions .btn {
+            font-size: 0.75rem;
+            padding: 0.25rem 1rem;
         }
 
         .research-item .research-text {
@@ -489,7 +494,7 @@
             .action-bar { flex-direction: column; gap: 0.8rem; align-items: stretch; }
             .research-grid { grid-template-columns: 1fr; }
             .research-item img { height: 180px; }
-            .research-item .pdf-wrapper { height: 180px; }
+            .research-item .pdf-container { height: 220px; }
         }
     </style>
 </head>
@@ -537,9 +542,9 @@
             </div>
         </div>
 
-        <!-- 卡片：研究成果（支持图片 + PDF，更大展示） -->
+        <!-- 卡片：研究成果（支持图片 + PDF 内嵌预览 + 下载） -->
         <div class="card card-full">
-            <div class="card-title">🏆 研究成果展示 <span style="font-weight:400; text-transform:none; font-size:0.7rem; color:#6f8aa3;">（支持 图片 / PDF · 点击放大预览）</span></div>
+            <div class="card-title">🏆 研究成果展示 <span style="font-weight:400; text-transform:none; font-size:0.7rem; color:#6f8aa3;">（图片 / PDF · 点击图片放大 · PDF可滚动预览并下载）</span></div>
             <div id="researchContainer"></div>
             <div class="research-actions">
                 <input type="text" id="researchTextInput" placeholder="输入成果描述..." />
@@ -551,7 +556,7 @@
             </div>
         </div>
 
-        <!-- 卡片：团队 & 联系（已更新） -->
+        <!-- 卡片：团队 & 联系 -->
         <div class="card card-full">
             <div class="card-title">👥 团队 & 联系</div>
             <div class="editable" contenteditable="true" id="teamInfo" spellcheck="true">
@@ -589,7 +594,7 @@
 
         // ---------- 存储 Key ----------
         const TIMELINE_KEY = 'pollen_timeline_v2';
-        const RESEARCH_KEY = 'pollen_research_v3';
+        const RESEARCH_KEY = 'pollen_research_v4';
         const EDITABLE_KEY = 'pollen_editable_v2';
 
         // ---------- 默认数据 ----------
@@ -697,11 +702,15 @@
                 const tag = isPdf ? '📄 PDF' : '🖼️ 图片';
                 let contentHtml = '';
                 if (isPdf && item.data) {
+                    // PDF 内嵌预览 + 下载按钮
                     contentHtml = `
-                        <a href="${item.data}" target="_blank" class="pdf-wrapper" title="点击预览或下载 PDF">
-                            <span class="pdf-icon">📄</span>
-                            <span class="pdf-name">${item.filename || '文档.pdf'}</span>
-                        </a>
+                        <div class="pdf-container">
+                            <embed src="${item.data}#toolbar=0" type="application/pdf" />
+                        </div>
+                        <div class="pdf-actions">
+                            <a href="${item.data}" target="_blank" class="btn btn-primary" style="font-size:0.75rem; padding:0.25rem 1rem; text-decoration:none;">📖 新窗口打开</a>
+                            <a href="${item.data}" download="${item.filename || '文档.pdf'}" class="btn btn-download" style="font-size:0.75rem; padding:0.25rem 1rem; text-decoration:none;">⬇️ 下载 PDF</a>
+                        </div>
                     `;
                 } else if (!isPdf && item.data) {
                     contentHtml = `<img src="${item.data}" alt="研究成果图片" loading="lazy" onclick="window.open('${item.data}','_blank')" />`;
