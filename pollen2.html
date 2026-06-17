@@ -1,0 +1,802 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>校园花粉检测 · 项目进度</title>
+    <style>
+        /* ----- 全局重置 & 基础样式 ----- */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background: #f4f7fc;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            padding: 2rem 1.5rem;
+            color: #1e2b3a;
+        }
+
+        .container {
+            max-width: 1100px;
+            width: 100%;
+        }
+
+        /* ----- 头部 ----- */
+        .header {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            gap: 1rem;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            flex-wrap: wrap;
+        }
+
+        .header-left h1 {
+            font-size: 2.2rem;
+            font-weight: 600;
+            letter-spacing: -0.02em;
+            background: linear-gradient(135deg, #1a4b6d, #2d7a9b);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .badge {
+            background: #d4e2f0;
+            color: #1a4b6d;
+            padding: 0.3rem 1rem;
+            border-radius: 40px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            font-size: 0.9rem;
+            color: #3d5a73;
+            background: #e6eff6;
+            padding: 0.4rem 1.2rem;
+            border-radius: 40px;
+        }
+
+        .header-right .dot {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            background: #2b9c6f;
+            border-radius: 50%;
+            animation: pulse-dot 1.8s infinite;
+        }
+
+        @keyframes pulse-dot {
+            0% { opacity: 0.6; transform: scale(0.95); }
+            50% { opacity: 1; transform: scale(1.2); }
+            100% { opacity: 0.6; transform: scale(0.95); }
+        }
+
+        /* ----- 可编辑提示 ----- */
+        .edit-hint {
+            background: #e9f0f9;
+            border-radius: 60px;
+            padding: 0.5rem 1.5rem;
+            font-size: 0.85rem;
+            color: #1f4a6b;
+            border: 1px dashed #89b3d1;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 2rem;
+        }
+        .edit-hint span {
+            font-weight: 500;
+        }
+
+        /* ----- 网格布局 ----- */
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.8rem;
+            margin-top: 0.5rem;
+        }
+
+        @media (max-width: 700px) {
+            .grid {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+        }
+
+        /* ----- 通用卡片 ----- */
+        .card {
+            background: #ffffff;
+            border-radius: 1.8rem;
+            padding: 1.6rem 1.8rem;
+            box-shadow: 0 8px 24px rgba(0,20,40,0.06), 0 2px 6px rgba(0,0,0,0.02);
+            border: 1px solid #e6edf5;
+            transition: box-shadow 0.2s ease;
+        }
+
+        .card:hover {
+            box-shadow: 0 16px 36px rgba(0,28,56,0.08);
+        }
+
+        .card-title {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.6px;
+            color: #5f7b94;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            border-bottom: 1px solid #eef4fa;
+            padding-bottom: 0.6rem;
+        }
+
+        .card-full {
+            grid-column: 1 / -1;
+        }
+
+        /* ----- 可编辑内容 ----- */
+        .editable {
+            outline: none;
+            transition: background 0.1s ease, box-shadow 0.15s ease;
+            border-radius: 6px;
+            padding: 0.1rem 0.3rem;
+        }
+
+        .editable:focus {
+            background: #f3f9ff;
+            box-shadow: 0 0 0 2px #aac7e4;
+        }
+
+        .editable:hover {
+            background: #f6faff;
+        }
+
+        /* ----- 时间线 (日期 + 文字都可编辑) ----- */
+        .timeline {
+            display: flex;
+            flex-direction: column;
+            gap: 0.9rem;
+        }
+
+        .timeline-item {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            border-left: 2px solid #c4d7e8;
+            padding-left: 1rem;
+            padding-bottom: 0.3rem;
+            flex-wrap: wrap;
+        }
+
+        .timeline-item .date-editable {
+            font-size: 0.7rem;
+            font-weight: 600;
+            color: #3d6b8a;
+            background: #e5eef7;
+            padding: 0.1rem 0.7rem;
+            border-radius: 30px;
+            white-space: nowrap;
+            min-width: 90px;
+            outline: none;
+        }
+
+        .timeline-item .date-editable:focus {
+            background: #d4e5f5;
+            box-shadow: 0 0 0 2px #aac7e4;
+        }
+
+        .timeline-item .content-editable {
+            font-size: 0.95rem;
+            color: #1d3345;
+            flex: 1;
+            outline: none;
+            padding: 0.1rem 0.3rem;
+            border-radius: 4px;
+        }
+
+        .timeline-item .content-editable:focus {
+            background: #f3f9ff;
+            box-shadow: 0 0 0 2px #aac7e4;
+        }
+
+        /* ----- 添加时间线条目 ----- */
+        .add-entry-area {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 1.2rem;
+            flex-wrap: wrap;
+        }
+
+        .add-entry-area input {
+            flex: 1;
+            min-width: 120px;
+            padding: 0.6rem 1rem;
+            border-radius: 60px;
+            border: 1px solid #d3dfeb;
+            font-size: 0.9rem;
+            background: #fafdff;
+            transition: 0.2s;
+        }
+
+        .add-entry-area input:focus {
+            border-color: #4d8eb0;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(55, 125, 170, 0.15);
+        }
+
+        .btn {
+            background: #e1ecf5;
+            border: none;
+            padding: 0.5rem 1.4rem;
+            border-radius: 60px;
+            font-weight: 500;
+            font-size: 0.85rem;
+            color: #1a4b6d;
+            cursor: pointer;
+            transition: 0.15s;
+            border: 1px solid transparent;
+        }
+
+        .btn-primary {
+            background: #1d5d82;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #144b6b;
+            transform: scale(0.97);
+        }
+
+        .btn-outline {
+            background: transparent;
+            border-color: #b7cfdf;
+        }
+
+        .btn-outline:hover {
+            background: #e3eef9;
+        }
+
+        .btn-success {
+            background: #2c7a5a;
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: #1f6246;
+            transform: scale(0.97);
+        }
+
+        .btn-danger-outline {
+            background: transparent;
+            border-color: #dba8a8;
+            color: #8f4a4a;
+        }
+
+        .btn-danger-outline:hover {
+            background: #fce8e8;
+        }
+
+        /* ----- 研究成果展示区 ----- */
+        .research-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 1.2rem;
+            margin-top: 0.8rem;
+        }
+
+        .research-item {
+            background: #f8fafd;
+            border-radius: 1.2rem;
+            padding: 1rem;
+            border: 1px solid #e2eaf2;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            position: relative;
+        }
+
+        .research-item img {
+            width: 100%;
+            height: 160px;
+            object-fit: cover;
+            border-radius: 0.8rem;
+            background: #e8eef5;
+        }
+
+        .research-item .research-text {
+            font-size: 0.9rem;
+            color: #1e3347;
+            outline: none;
+            padding: 0.2rem 0.3rem;
+            border-radius: 4px;
+        }
+
+        .research-item .research-text:focus {
+            background: #f3f9ff;
+            box-shadow: 0 0 0 2px #aac7e4;
+        }
+
+        .research-item .delete-btn {
+            position: absolute;
+            top: 0.4rem;
+            right: 0.4rem;
+            background: rgba(200, 70, 70, 0.85);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 26px;
+            height: 26px;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: 0.15s;
+            line-height: 1;
+        }
+
+        .research-item .delete-btn:hover {
+            background: #b33;
+            transform: scale(1.08);
+        }
+
+        .research-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.6rem;
+            margin-top: 1rem;
+            padding-top: 0.8rem;
+            border-top: 1px solid #e2eaf2;
+        }
+
+        .research-actions input[type="text"] {
+            flex: 1;
+            min-width: 140px;
+            padding: 0.5rem 1rem;
+            border-radius: 60px;
+            border: 1px solid #d3dfeb;
+            font-size: 0.9rem;
+        }
+
+        .research-actions input[type="file"] {
+            display: none;
+        }
+
+        .file-upload-label {
+            background: #e1ecf5;
+            padding: 0.5rem 1.4rem;
+            border-radius: 60px;
+            font-weight: 500;
+            font-size: 0.85rem;
+            color: #1a4b6d;
+            cursor: pointer;
+            border: 1px solid #b7cfdf;
+            transition: 0.15s;
+        }
+
+        .file-upload-label:hover {
+            background: #d3e3f0;
+        }
+
+        /* ----- 底部操作栏 ----- */
+        .action-bar {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 2rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid #dde7f0;
+        }
+
+        .save-status {
+            font-size: 0.85rem;
+            color: #3e6b88;
+            background: #ecf4fa;
+            padding: 0.2rem 1.2rem;
+            border-radius: 40px;
+        }
+
+        .save-status.success {
+            background: #d7f0e3;
+            color: #1d6b4a;
+        }
+
+        /* 空状态 */
+        .empty-state {
+            color: #7a93ac;
+            font-style: italic;
+            padding: 0.8rem 0;
+            text-align: center;
+        }
+
+        @media (max-width: 500px) {
+            .header-left h1 { font-size: 1.6rem; }
+            .card { padding: 1.2rem; }
+            .action-bar { flex-direction: column; gap: 0.8rem; align-items: stretch; }
+            .research-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+
+    <!-- 头部 -->
+    <header class="header">
+        <div class="header-left">
+            <h1>🌿 花粉检测 · 实时追踪</h1>
+            <span class="badge">📋 研究项目</span>
+        </div>
+        <div class="header-right">
+            <span class="dot"></span>
+            <span id="liveDate">加载中...</span>
+        </div>
+    </header>
+
+    <!-- 编辑提示 -->
+    <div class="edit-hint">
+        ✏️ <span>点击任意文字即可编辑</span> · 修改后点击下方 “保存所有更新” 持久化
+    </div>
+
+    <!-- 主网格 -->
+    <div class="grid">
+
+        <!-- 卡片：项目简介 (全宽) -->
+        <div class="card card-full">
+            <div class="card-title">📌 项目简介</div>
+            <div class="editable" contenteditable="true" id="projectDesc" spellcheck="true">
+                <p style="font-size:1.05rem; font-weight:500; margin-bottom:0.3rem;">校园大气花粉浓度实时监测与研究</p>
+                <p style="color:#2f4b64;">本项目旨在通过部署低成本传感器网络，对校园内主要致敏花粉（如松科、悬铃木属）进行全天候监测，结合气象数据建立预测模型，为过敏人群提供预警。</p>
+            </div>
+        </div>
+
+        <!-- 卡片：时间线 -->
+        <div class="card card-full">
+            <div class="card-title">⏳ 研究进程时间线 <span style="font-weight:400; text-transform:none; font-size:0.7rem; color:#6f8aa3;">（点击日期或文字直接编辑）</span></div>
+            <div class="timeline" id="timelineContainer">
+                <!-- 由 JS 动态渲染 -->
+            </div>
+            <div class="add-entry-area">
+                <input type="text" id="newEntryInput" placeholder="输入新事件描述..." />
+                <button class="btn btn-primary" id="addEntryBtn">+ 添加</button>
+                <button class="btn btn-outline" id="resetTimelineBtn" style="font-size:0.75rem;">↺ 重置示例</button>
+            </div>
+        </div>
+
+        <!-- 卡片：研究成果 (全宽) -->
+        <div class="card card-full">
+            <div class="card-title">🏆 研究成果展示</div>
+            <div id="researchContainer">
+                <!-- 由 JS 动态渲染研究成果 -->
+            </div>
+            <div class="research-actions">
+                <input type="text" id="researchTextInput" placeholder="输入研究成果描述..." />
+                <label class="file-upload-label" for="researchImageUpload">🖼️ 添加图片</label>
+                <input type="file" id="researchImageUpload" accept="image/*" />
+                <button class="btn btn-success" id="addResearchBtn">+ 添加成果</button>
+            </div>
+        </div>
+
+        <!-- 卡片：团队 & 联系 (全宽) -->
+        <div class="card card-full">
+            <div class="card-title">👥 团队 & 联系</div>
+            <div class="editable" contenteditable="true" id="teamInfo" spellcheck="true">
+                <p><strong>指导老师：</strong> 张教授 · 环境科学学院</p>
+                <p><strong>项目成员：</strong> 李明（数据采集）、王芳（建模分析）、陈宇（硬件维护）</p>
+                <p style="margin-top:0.4rem; color:#3d687f;">📧 联络邮箱：pollen.research@campus.edu</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- 底部操作栏 -->
+    <div class="action-bar">
+        <div class="save-status" id="saveStatus">💾 内容自动保存在本地</div>
+        <div style="display: flex; gap: 0.6rem; flex-wrap: wrap;">
+            <button class="btn btn-primary" id="saveAllBtn">💾 保存所有更新</button>
+        </div>
+    </div>
+
+</div>
+
+<script>
+    (function() {
+        "use strict";
+
+        // ---------- 工具函数 ----------
+        function getToday() {
+            const d = new Date();
+            const y = d.getFullYear();
+            const m = String(d.getMonth() + 1).padStart(2, '0');
+            const day = String(d.getDate()).padStart(2, '0');
+            return `${y}-${m}-${day}`;
+        }
+
+        document.getElementById('liveDate').textContent = `📅 ${getToday()}`;
+
+        // ---------- 存储 Key ----------
+        const TIMELINE_KEY = 'pollen_timeline_v2';
+        const RESEARCH_KEY = 'pollen_research_v2';
+        const EDITABLE_KEY = 'pollen_editable_v2';
+
+        // ---------- 默认数据 ----------
+        const defaultTimeline = [
+            { date: '2026-05-10', text: '项目启动，完成传感器选型与采购' },
+            { date: '2026-05-22', text: '第一批 3 个采样点安装完成，开始试运行' },
+            { date: '2026-06-02', text: '数据回传稳定，启动花粉浓度基线统计' },
+            { date: '2026-06-14', text: '完成 5 个采样点部署，校准传感器' },
+        ];
+
+        const defaultResearch = [
+            { id: 'r1', text: '完成首批传感器数据校准，误差＜5%', image: '' },
+            { id: 'r2', text: '建立花粉浓度与气象因子的初步相关性模型', image: '' },
+        ];
+
+        // ---------- 通用存储 ----------
+        function loadData(key, defaultVal) {
+            const stored = localStorage.getItem(key);
+            if (stored) {
+                try {
+                    const parsed = JSON.parse(stored);
+                    if (Array.isArray(parsed) && parsed.length) return parsed;
+                    return defaultVal;
+                } catch { return defaultVal; }
+            }
+            return defaultVal;
+        }
+
+        function saveData(key, data) {
+            localStorage.setItem(key, JSON.stringify(data));
+        }
+
+        // ---------- 时间线 ----------
+        function loadTimeline() { return loadData(TIMELINE_KEY, defaultTimeline); }
+        function saveTimeline(entries) { saveData(TIMELINE_KEY, entries); }
+
+        function renderTimeline(entries) {
+            const container = document.getElementById('timelineContainer');
+            if (!container) return;
+            if (!entries || entries.length === 0) {
+                container.innerHTML = `<div class="empty-state">暂无记录，添加一条吧</div>`;
+                return;
+            }
+            const sorted = [...entries].sort((a, b) => (a.date < b.date ? 1 : -1));
+            let html = '';
+            sorted.forEach((item, index) => {
+                const dateVal = item.date || getToday();
+                const textVal = item.text || '';
+                html += `
+                    <div class="timeline-item" data-index="${index}">
+                        <span class="date-editable" contenteditable="true" data-field="date">${dateVal}</span>
+                        <span class="content-editable" contenteditable="true" data-field="text">${textVal}</span>
+                    </div>
+                `;
+            });
+            container.innerHTML = html;
+
+            // 绑定编辑事件：实时更新内存数据
+            container.querySelectorAll('.date-editable, .content-editable').forEach(el => {
+                el.addEventListener('blur', function() {
+                    const item = this.closest('.timeline-item');
+                    if (!item) return;
+                    const index = parseInt(item.dataset.index, 10);
+                    const entries = loadTimeline();
+                    if (index >= 0 && index < entries.length) {
+                        const field = this.dataset.field;
+                        if (field === 'date') entries[index].date = this.textContent.trim() || getToday();
+                        else if (field === 'text') entries[index].text = this.textContent.trim();
+                        saveTimeline(entries);
+                        updateSaveStatus('✅ 时间线已更新', true);
+                    }
+                });
+            });
+        }
+
+        function addTimelineEntry(text) {
+            if (!text || text.trim() === '') return false;
+            const entries = loadTimeline();
+            entries.push({ date: getToday(), text: text.trim() });
+            saveTimeline(entries);
+            renderTimeline(entries);
+            updateSaveStatus('✅ 新条目已添加', true);
+            return true;
+        }
+
+        function resetTimeline() {
+            saveTimeline(defaultTimeline.slice());
+            renderTimeline(loadTimeline());
+            updateSaveStatus('↺ 已重置时间线', true);
+        }
+
+        // ---------- 研究成果 ----------
+        function loadResearch() { return loadData(RESEARCH_KEY, defaultResearch); }
+        function saveResearch(data) { saveData(RESEARCH_KEY, data); }
+
+        function renderResearch(items) {
+            const container = document.getElementById('researchContainer');
+            if (!container) return;
+            if (!items || items.length === 0) {
+                container.innerHTML = `<div class="empty-state">暂无研究成果，添加第一条吧</div>`;
+                return;
+            }
+            let html = `<div class="research-grid">`;
+            items.forEach((item, index) => {
+                const imgHtml = item.image ? `<img src="${item.image}" alt="研究成果图片" />` : '';
+                html += `
+                    <div class="research-item" data-index="${index}">
+                        <button class="delete-btn" data-index="${index}">✕</button>
+                        ${imgHtml}
+                        <div class="research-text" contenteditable="true" data-field="text">${item.text || ''}</div>
+                    </div>
+                `;
+            });
+            html += `</div>`;
+            container.innerHTML = html;
+
+            // 删除按钮
+            container.querySelectorAll('.delete-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const idx = parseInt(this.dataset.index, 10);
+                    const items = loadResearch();
+                    if (idx >= 0 && idx < items.length) {
+                        items.splice(idx, 1);
+                        saveResearch(items);
+                        renderResearch(items);
+                        updateSaveStatus('🗑️ 已删除', true);
+                    }
+                });
+            });
+
+            // 编辑文字自动保存
+            container.querySelectorAll('.research-text').forEach(el => {
+                el.addEventListener('blur', function() {
+                    const item = this.closest('.research-item');
+                    if (!item) return;
+                    const index = parseInt(item.dataset.index, 10);
+                    const items = loadResearch();
+                    if (index >= 0 && index < items.length) {
+                        items[index].text = this.textContent.trim();
+                        saveResearch(items);
+                        updateSaveStatus('✅ 研究成果已更新', true);
+                    }
+                });
+            });
+        }
+
+        function addResearchItem(text, imageDataUrl) {
+            const items = loadResearch();
+            items.push({
+                id: 'r' + Date.now(),
+                text: text.trim() || '新研究成果',
+                image: imageDataUrl || ''
+            });
+            saveResearch(items);
+            renderResearch(items);
+            updateSaveStatus('✅ 研究成果已添加', true);
+        }
+
+        // ---------- 保存所有可编辑区域 ----------
+        function saveAllEditable() {
+            const editableElements = document.querySelectorAll('.editable[contenteditable="true"]');
+            const data = {};
+            editableElements.forEach(el => {
+                if (el.id) data[el.id] = el.innerHTML;
+            });
+            saveData(EDITABLE_KEY, data);
+            // 时间线和研究成果已经各自保存
+            updateSaveStatus('✅ 所有内容已保存', true);
+        }
+
+        function loadAllEditable() {
+            const data = loadData(EDITABLE_KEY, {});
+            for (const [id, content] of Object.entries(data)) {
+                const el = document.getElementById(id);
+                if (el && el.classList.contains('editable')) {
+                    el.innerHTML = content;
+                }
+            }
+        }
+
+        // ---------- 保存状态提示 ----------
+        function updateSaveStatus(msg, isSuccess = true) {
+            const statusEl = document.getElementById('saveStatus');
+            if (statusEl) {
+                statusEl.textContent = msg;
+                statusEl.classList.toggle('success', isSuccess);
+                setTimeout(() => {
+                    statusEl.textContent = '💾 内容自动保存在本地';
+                    statusEl.classList.remove('success');
+                }, 2500);
+            }
+        }
+
+        // ---------- 初始化 ----------
+        function init() {
+            // 加载可编辑区域
+            loadAllEditable();
+
+            // 加载时间线
+            renderTimeline(loadTimeline());
+
+            // 加载研究成果
+            renderResearch(loadResearch());
+
+            // 绑定添加时间线
+            document.getElementById('addEntryBtn').addEventListener('click', function() {
+                const input = document.getElementById('newEntryInput');
+                if (addTimelineEntry(input.value)) input.value = '';
+            });
+            document.getElementById('newEntryInput').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') document.getElementById('addEntryBtn').click();
+            });
+            document.getElementById('resetTimelineBtn').addEventListener('click', function() {
+                if (confirm('重置将丢失当前时间线内容，确定吗？')) resetTimeline();
+            });
+
+            // 绑定添加研究成果
+            document.getElementById('addResearchBtn').addEventListener('click', function() {
+                const textInput = document.getElementById('researchTextInput');
+                const text = textInput.value.trim() || '新研究成果';
+                // 检查是否有待上传的图片
+                const fileInput = document.getElementById('researchImageUpload');
+                if (fileInput.files && fileInput.files[0]) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        addResearchItem(text, e.target.result);
+                        textInput.value = '';
+                        fileInput.value = '';
+                    };
+                    reader.readAsDataURL(fileInput.files[0]);
+                } else {
+                    addResearchItem(text, '');
+                    textInput.value = '';
+                }
+            });
+
+            // 图片上传预览：直接绑定到添加按钮逻辑中
+            document.getElementById('researchImageUpload').addEventListener('change', function() {
+                // 只是提示用户已选图片，实际添加由按钮触发
+                if (this.files && this.files[0]) {
+                    updateSaveStatus('📷 已选择图片，点击"添加成果"完成', true);
+                }
+            });
+
+            // 保存所有
+            document.getElementById('saveAllBtn').addEventListener('click', function() {
+                // 先触发一次时间线和研究的保存（blur 已自动保存，这里作为补充）
+                // 收集所有可编辑区域
+                saveAllEditable();
+            });
+
+            // 所有可编辑区域失焦自动保存
+            document.querySelectorAll('.editable[contenteditable="true"]').forEach(el => {
+                el.addEventListener('blur', function() {
+                    setTimeout(() => saveAllEditable(), 100);
+                });
+            });
+
+            updateSaveStatus('💾 内容自动保存在本地', false);
+        }
+
+        if (document.readyState === 'complete') init();
+        else window.addEventListener('load', init);
+
+    })();
+</script>
+
+</body>
+</html>
