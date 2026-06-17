@@ -605,10 +605,15 @@
             { date: '2026-06-14', text: '完成 5 个采样点部署，校准传感器' },
         ];
 
-        const defaultResearch = [
-            { id: 'r1', text: '完成首批传感器数据校准，误差＜5%', type: 'image', data: '' },
-            { id: 'r2', text: '建立花粉浓度与气象因子的初步相关性模型', type: 'image', data: '' },
-        ];
+   const defaultResearch = [
+    { 
+        id: 'r1', 
+        text: 'Morton, 1975 — Ecological Sources of Selection on Avian Sounds（鸟类声音生态选择压力经典文献）', 
+        type: 'pdf', 
+        data: 'https://raw.githubusercontent.com/Twitchter/pollen-project/main/pdfs/avian_sounds_1975.pdf',
+        filename: 'avian_sounds_1975.pdf'
+    },
+];
 
         // ---------- 通用存储 ----------
         function loadData(key, defaultVal) {
